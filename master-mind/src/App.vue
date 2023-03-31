@@ -1,11 +1,14 @@
 <script setup>
 import { reactive } from 'vue'
 
+/* Computer */
+let computerSelectList = [];
+
 /* User */
 let userSelectedList = reactive([]);
 let myColor = '';
 let colorIndex = 0;
-let countAccept = 0;
+let countAccept = reactive({count:0});
 /* 사용자가 색을 선택했을 때 */
 function pickColor(color, i){
   myColor = color;
@@ -14,26 +17,31 @@ function pickColor(color, i){
 /* 선택한 색을 원하는 위치에 놓았을 때 */
 function selectPosition(index){
   if(myColor===''){
-    alert('먼저 색을 선택해 주세요!');
+    alert('색을 선택해 주세요!');
     return false;
   }
-  userSelectedList[countAccept].colors[index] = myColor;
-  console.log(userSelectedList[countAccept].colors[colorIndex])
+
+  if(userSelectedList[countAccept.count].colors.includes(myColor)){
+    alert('같은색을 사용할 수 없습니다!');
+    return false;
+  }
+
+  userSelectedList[countAccept.count].colors[index] = myColor;
+  myColor = '';
 }
 
 /* accept 버튼을 눌렀을때 */
 function accept(){
-  if(userSelectedList[countAccept].colors.includes('grey-darken-2')){
+  if(userSelectedList[countAccept.count].colors.includes('grey-darken-2')){
     alert('색을 모두 선택해주세요!');
     return false;
   }
-  countAccept++;
+  /* 계산식 들어갈 자리 */
+  /* =====계산식 끝==== */
+  countAccept.count++;
 }
 
-/* Computer */
-let computerSelectList = [];
-
-/* Created */
+/* Created Start */
 for(let i=0; i<10; i++){
   userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['', '', '', ''] })
 }
@@ -43,6 +51,22 @@ const dialog = reactive({state:false})
 function activeDialog() {
   dialog.state = dialog.state !== true;
 }
+
+/* 컴퓨터 랜덤 색상 */
+function randomColors(){
+  computerSelectList = [];
+  for(let i=0; i< colors.length; i++){
+    computerSelectList.push(colors[Math.floor(Math.random() * colors.length)])
+  }
+  let set = new Set(computerSelectList);
+
+  if(colors.length !== set.size){
+    randomColors();
+  }
+}
+randomColors();
+
+/* Created End */
 </script>
 
 <template>
@@ -64,7 +88,7 @@ function activeDialog() {
           variant="tonal"
           class="mb-3 d-flex justify-space-around pa-1"
         >
-          <v-btn v-for="(item, i) in card.colors" @click="selectPosition(i)" :disabled="index!==countAccept" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(item, i) in card.colors" @click="selectPosition(i)" :disabled="index!==countAccept.count" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
       <div class="d-flex flex-column justify-center ChkBoard ml-10">
