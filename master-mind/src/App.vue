@@ -3,7 +3,24 @@ import { reactive } from 'vue'
 
 /* User */
 let userSelectedList = [];
-let selectColor = ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'];
+let myColor = '';
+let colorIndex = 0;
+let countAccept = 0;
+/* 사용자가 색을 선택했을 때 */
+function pickColor(color, i){
+  myColor = color;
+  colorIndex = i;
+}
+/* 선택한 색을 원하는 위치에 놓았을 때 */
+
+/* accept 버튼을 눌렀을때 */
+function accept(){
+  if(userSelectedList[countAccept].colors.includes('grey-darken-2')){
+    alert('색을 모두 선택해주세요!');
+    return false;
+  }
+  countAccept++;
+}
 
 /* Computer */
 let computerSelectList = [];
@@ -16,15 +33,11 @@ let colors = ['red', 'teal', 'blue', 'yellow']
 const dialog = reactive({state:false})
 
 function activeDialog() {
-  console.log(dialog.state + '4')
   if(dialog.state===true){
-    console.log(dialog.state + '1')
     dialog.state = false
   }else{
-    console.log(dialog.state + '2')
     dialog.state = true;
   }
-  console.log(dialog.state + '3')
 }
 </script>
 
@@ -47,7 +60,7 @@ function activeDialog() {
           variant="tonal"
           class="mb-3 d-flex justify-space-around pa-1"
         >
-          <v-btn v-for="(item, i) in card.colors" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(item, i) in card.colors" :disabled="index!==countAccept" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
       <div class="d-flex flex-column justify-center ChkBoard ml-10">
@@ -57,7 +70,7 @@ function activeDialog() {
           variant="tonal"
           class="mb-3 pa-1 d-flex justify-space-around"
         >
-          <v-btn v-for="(chk, index) in item.checkList" :key="`chk-${index}`" :color="chk==='' ? 'grey' : chk==='color' ? 'white' : 'red'" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(chk, index) in item.checkList" disabled :key="`chk-${index}`" :color="chk==='' ? 'grey' : chk==='color' ? 'white' : 'red'" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
     </div>
@@ -65,11 +78,11 @@ function activeDialog() {
 
     <div class="UserBoard d-flex flex-column align-center">
       <v-card variant="tonal"  class="d-flex justify-space-around UserColor mb-10 pa-1">
-        <v-btn v-for="(color,i) in colors" :key="`colors-${i}`" :color="color" icon="mid-plus"></v-btn>
+        <v-btn v-for="(color,i) in colors" :key="`colors-${i}`" @click="pickColor(color, i)" :color="color" icon="mid-plus"></v-btn>
       </v-card>
 
       <div class="d-flex justify-space-around">
-      <v-btn class="CheckBtn" color="blue-accent-3">accept</v-btn>
+      <v-btn class="CheckBtn" color="blue-accent-3"  @click="accept">accept</v-btn>
 
         <v-btn
             color="yellow-lighten-1"
@@ -77,7 +90,6 @@ function activeDialog() {
         >
           Rule
         </v-btn>
-
         <v-dialog
           v-model="dialog.state"
           width="50%"
