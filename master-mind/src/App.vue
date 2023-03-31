@@ -1,0 +1,116 @@
+<script setup>
+import { reactive } from 'vue'
+
+/* User */
+let userSelectedList = [];
+let selectColor = ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'];
+
+/* Computer */
+let computerSelectList = [];
+
+/* Created */
+for(let i=0; i<10; i++){
+  userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i })
+}
+let colors = ['red', 'teal', 'blue', 'yellow']
+</script>
+<!--
+
+- 컴퓨터가 일련의 색상을 선택합니다. 색상 수는 코드 길이입니다. 기본 코드 길이는 4이지만 새 게임을 시작할 때 변경할 수 있습니다.
+
+- 게임의 목적은 컴퓨터의 순서에서 색상의 정확한 위치를 추측하는 것입니다.
+
+- 기본적으로 색상은 코드 시퀀스에서 한 번만 사용할 수 있습니다. '중복 허용'을 선택한 상태에서 새 게임을 시작하면 코드 시퀀스에서 모든 색상을 여러 번 사용할 수 있습니다.
+
+- 당신의 추측으로 한 줄을 채우고 '확인' 버튼을 클릭하면 컴퓨터가 당신의 추측 결과로 응답합니다.
+
+- 코드 시퀀스에서 올바른 색상과 올바른 위치에 있는 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 빨간색을 표시합니다.
+
+- 올바른 색상이지만 코드 시퀀스에서 올바른 위치에 있지 않은 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 흰색을 표시합니다.
+
+- 코드 시퀀스의 모든 색상을 추측하고 모두 올바른 위치에 있을 때 게임에서 승리합니다.
+
+- 컴퓨터 코드 시퀀스를 추측하지 않고 모든 시도를 사용하면 게임에서 패배합니다.
+
+이 게임을 하는 방법:
+
+- '새 게임 시작' 버튼을 클릭하여 새 게임을 시작합니다. 기본 게임 매개변수를 변경하려면 '새 게임 시작' 버튼을 클릭하기 전에 '코드 길이' 및/또는 '중복 허용' 필드를 변경할 수 있습니다.
+
+- 선 채우기를 시작하려면 먼저 표 하단에서 색상을 클릭하여 선택해야 합니다. 색상을 선택한 후 원하는 위치를 클릭하여 위의 현재 추측 라인에 넣을 수 있습니다.
+
+- 색상 선택을 변경하려면 두 가지 방법이 있습니다. 하나는 하단의 색상 중 하나에서 새 색상을 클릭하는 것이고 다른 하나는 마우스 휠을 스크롤하는 것입니다.
+
+- 전체 줄을 채운 후에도 컴퓨터가 추측에 응답하도록 요청하기 전에 선택을 변경할 수 있습니다. 추측에 만족하면 '확인' 버튼을 클릭하고 컴퓨터 응답을 받으세요.
+-->
+
+<template>
+  <div class="PlayBox d-flex flex-column align-center">
+
+
+    <div class="text-h3 GameTitle d-flex justify-center">
+      <span>MasterMind</span>
+    </div>
+
+    <div class="BoardSet d-flex justify-space-between mb-lg-10">
+      <div class="d-flex flex-column justify-center GameScore">
+
+      </div>
+      <div class="d-flex flex-column justify-center GameBoard">
+        <v-card
+          v-for="(card,index) in userSelectedList"
+          variant="tonal"
+          class="mb-2 d-flex justify-space-around"
+        >
+          <v-btn v-for="(item, i) in card.colors" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
+        </v-card>
+      </div>
+      <div class="d-flex flex-column justify-center ETCBoard">
+
+      </div>
+    </div>
+
+
+    <div class="UserBoard d-flex flex-column">
+      <v-card variant="tonal" class="mb-lg-10 d-flex justify-space-around">
+        <v-btn v-for="(select, i) in selectColor" :key="`select-${i}`" :color="select" icon="mdi-plus"></v-btn>
+      </v-card>
+
+      <v-card variant="tonal"  class="d-flex justify-space-around">
+        <v-btn v-for="(color,i) in colors" :key="`colors-${i}`" :color="color" icon="mid-plus"></v-btn>
+      </v-card>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.PlayBox {
+  width: 100vw;
+  height: 100vh;
+}
+
+.GameTitle{
+  padding: 10px;
+}
+
+/* BoardSet Start */
+.BoardSet{
+  width: 100%;
+}
+
+.GameScore{
+  width: 30%;
+
+}
+
+.GameBoard{
+  width: 30%;
+}
+.ETCBoard{
+  width: 30%;
+}
+/* BoardSet End */
+.UserBoard{
+  width: 30%;
+}
+
+</style>
