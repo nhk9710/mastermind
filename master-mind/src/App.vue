@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 
 /* User */
-let userSelectedList = [];
+let userSelectedList = reactive([]);
 let myColor = '';
 let colorIndex = 0;
 let countAccept = 0;
@@ -12,6 +12,14 @@ function pickColor(color, i){
   colorIndex = i;
 }
 /* 선택한 색을 원하는 위치에 놓았을 때 */
+function selectPosition(index){
+  if(myColor===''){
+    alert('먼저 색을 선택해 주세요!');
+    return false;
+  }
+  userSelectedList[countAccept].colors[index] = myColor;
+  console.log(userSelectedList[countAccept].colors[colorIndex])
+}
 
 /* accept 버튼을 눌렀을때 */
 function accept(){
@@ -33,11 +41,7 @@ let colors = ['red', 'teal', 'blue', 'yellow']
 const dialog = reactive({state:false})
 
 function activeDialog() {
-  if(dialog.state===true){
-    dialog.state = false
-  }else{
-    dialog.state = true;
-  }
+  dialog.state = dialog.state !== true;
 }
 </script>
 
@@ -60,7 +64,7 @@ function activeDialog() {
           variant="tonal"
           class="mb-3 d-flex justify-space-around pa-1"
         >
-          <v-btn v-for="(item, i) in card.colors" :disabled="index!==countAccept" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(item, i) in card.colors" @click="selectPosition(i)" :disabled="index!==countAccept" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
       <div class="d-flex flex-column justify-center ChkBoard ml-10">
