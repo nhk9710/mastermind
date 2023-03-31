@@ -1,2 +1,1 @@
-# mastermind
-Mini Project
+#Mini Project
