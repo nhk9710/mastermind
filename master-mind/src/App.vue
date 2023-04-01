@@ -36,14 +36,21 @@ function accept(){
     alert('색을 모두 선택해주세요!');
     return false;
   }
-  /* 계산식 들어갈 자리 */
+    /* 계산식 들어갈 자리 */
+    for (let i = 0; i < computerSelectList.length; i++) {
+        if (userSelectedList[countAccept.count].colors[i] === computerSelectList[i]) {
+            userSelectedList[countAccept.count].checkList[i] = 'red'
+        } else if (computerSelectList.includes(userSelectedList[countAccept.count].colors[i])) {
+            userSelectedList[countAccept.count].checkList[i] = 'white'
+        }
+    }
   /* =====계산식 끝==== */
   countAccept.count++;
 }
 
 /* Created Start */
 for(let i=0; i<10; i++){
-  userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['', '', '', ''] })
+  userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['','','',''] })
 }
 let colors = ['red', 'teal', 'blue', 'yellow']
 const dialog = reactive({state:false})
@@ -71,7 +78,7 @@ randomColors();
 
 <template>
   <div class="PlayBox d-flex flex-column align-center">
-
+<pre>{{ computerSelectList }}</pre>
 
     <div class="text-h3 GameTitle d-flex justify-center">
       <span>MasterMind</span>
@@ -98,7 +105,7 @@ randomColors();
           variant="tonal"
           class="mb-3 pa-1 d-flex justify-space-around"
         >
-          <v-btn v-for="(chk, index) in item.checkList" disabled :key="`chk-${index}`" :color="chk==='' ? 'grey' : chk==='color' ? 'white' : 'red'" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(chk, index) in item.checkList" disabled :key="`chk-${index}`" :color="chk==='' ? 'grey' : chk==='white' ? 'blue' : 'red'" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
     </div>
