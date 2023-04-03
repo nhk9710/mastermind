@@ -11,13 +11,24 @@ let userSelectedList = reactive([]);
 let myColor = '';
 let colorIndex = 0;
 let countAccept = reactive({count:0});
+let userName = '';
+let userDialog = reactive({chk: false})
 
 
 /* 사용자가 색을 선택했을 때 */
 function pickColor(color, i){
+    if(userName===''){
+        userDialog.chk = true;
+    }
   myColor = color;
   colorIndex = i;
 }
+/* 닉네임 입력 */
+function inputUserName(){
+    userDialog.chk = false;
+}
+
+
 /* 선택한 색을 원하는 위치에 놓았을 때 */
 function selectPosition(index){
   if(myColor===''){
@@ -58,6 +69,7 @@ function accept(){
         explode();
         return false;
     }
+    // console.log(computerSelectList)
     userSelectedList[countAccept.count].checkList.sort()
   /* =====계산식 끝==== */
   countAccept.count++;
@@ -130,6 +142,7 @@ function three_line_summary(){
 <template>
   <div class="PlayBox d-flex flex-column align-center">
     <ConfettiExplosion v-if="confetti_Visible" :stageHeight="900" />
+
     <div class="text-h3 GameTitle d-flex justify-center">
       <span>MasterMind</span>
     </div>
@@ -142,10 +155,11 @@ function three_line_summary(){
         <v-card
           v-for="(card,index) in userSelectedList"
           :key="`card-${index}`"
-          variant="tonal"
+
+          :color="index!==countAccept.count ? 'grey-lighten-3' : 'lime-lighten-2'"
           class="mb-3 d-flex justify-space-around pa-1"
         >
-          <v-btn v-for="(item, i) in card.colors" @click="selectPosition(i)" :disabled="index!==countAccept.count" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(item, i) in card.colors" @click="selectPosition(i)"  :style="index!==countAccept.count ? 'pointer-events:none;':''" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
       <div class="d-flex flex-column justify-center ChkBoard ml-10">
@@ -224,6 +238,15 @@ function three_line_summary(){
               <v-btn color="primary" block @click="dialog.state = false">close</v-btn>
               </v-card-actions>
             </template>
+          </v-card>
+        </v-dialog>
+        <v-dialog
+          v-model="userDialog.chk"
+          width="30%"
+        >
+          <v-card>
+          <v-text-field label="NickName" v-model="userName" style></v-text-field>
+            <v-btn color="primary" @click="inputUserName">submit</v-btn>
           </v-card>
         </v-dialog>
       </div>
