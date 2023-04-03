@@ -76,7 +76,7 @@ const explode = async() => {
 
 function newGame(){
     tryAgain.chk = false
-    userSelectedList = [];
+    userSelectedList = reactive([]);
     for (let i = 0; i < 10; i++) {
         userSelectedList.push({
             colors: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2'],
@@ -88,7 +88,7 @@ function newGame(){
     countAccept = reactive({count:0});
     tryAgain = reactive({chk:false});
     randomColors();
-    console.log(computerSelectList)
+    // console.log(computerSelectList)
 }
 
 /* =============================Created Start========================= */
@@ -101,7 +101,10 @@ const confetti_Visible = ref(false);
         })
     }
     let colors = ['red', 'teal', 'blue', 'yellow', 'orange', 'purple']
-    const dialog = reactive({state: false})
+    const dialog = reactive({state: false, summary: false})
+function three_line_summary(){
+        dialog.summary = dialog.summary !== true;
+}
 
     function activeDialog() {
         dialog.state = dialog.state !== true;
@@ -120,7 +123,7 @@ const confetti_Visible = ref(false);
         }
     }
     randomColors();
-console.log(computerSelectList)
+// console.log(computerSelectList)
 /* ==============================Created End============================ */
 </script>
 
@@ -180,9 +183,9 @@ console.log(computerSelectList)
           v-model="dialog.state"
           width="50%"
         >
-          <v-card>
+          <v-card >
             <v-card-text>
-                <div>
+                <div v-if="!dialog.summary">
               - 컴퓨터가 일련의 색상을 선택합니다. 색상 수는 코드 길이입니다. 기본 코드 길이는 4이지만 새 게임을 시작할 때 변경할 수 있습니다.<br><br>
 
               - 게임의 목적은 컴퓨터의 순서에서 색상의 정확한 위치를 추측하는 것입니다.<br><br>
@@ -207,10 +210,20 @@ console.log(computerSelectList)
 
               - 전체 줄을 채운 후에도 컴퓨터가 추측에 응답하도록 요청하기 전에 선택을 변경할 수 있습니다. 추측에 만족하면 '확인' 버튼을 클릭하고 컴퓨터 응답을 받으세요.
                 </div>
+              <div v-else>
+                - 색상을 선택하고 넣어주세요(중복안됨)<br><br>
+                - 한줄 완성하셨으면 accept 버튼을 눌러주세요<br><br>
+                - 10번안에 맞추면 성공 아니면 실패입니다.<br><br>
+              </div>
             </v-card-text>
-            <v-card-actions>
+            <template>
+              <v-card-actions>
               <v-btn color="primary" block @click="dialog.state = false">close</v-btn>
-            </v-card-actions>
+              </v-card-actions>
+              <v-card-actions>
+              <v-btn color="red" block @click="three_line_summary" >summary</v-btn>
+              </v-card-actions>
+            </template>
           </v-card>
         </v-dialog>
       </div>
