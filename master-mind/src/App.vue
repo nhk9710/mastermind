@@ -169,7 +169,7 @@ function three_line_summary(){
           variant="tonal"
           class="mb-3 pa-1 d-flex justify-space-around"
         >
-          <v-btn v-for="(chk, index) in item.checkList" disabled :key="`chk-${index}`" :color="chk" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(chk, index) in item.checkList" style="pointer-events: none" :key="`chk-${index}`" :color="chk" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
     </div>
