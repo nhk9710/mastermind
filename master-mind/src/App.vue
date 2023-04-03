@@ -1,5 +1,6 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref,reactive,nextTick } from 'vue'
+import ConfettiExplosion from 'vue-confetti-explosion'
 
 /* Computer */
 let computerSelectList = [];
@@ -51,15 +52,22 @@ function accept(){
     }
     if(congratulation===4){
         alert(`You did it the ${countAccept.count+1} time!!!!`);
-        tryAgain.chk = true;
+        explode();
         return false;
     }
     userSelectedList[countAccept.count].checkList.sort()
   /* =====계산식 끝==== */
   countAccept.count++;
 }
+const explode = async() => {
+    confetti_Visible.value = false;
+    await nextTick();
+    confetti_Visible.value = true;
+}
 
 /* Created Start */
+const confetti_Visible = ref(false);
+
 for(let i=0; i<10; i++){
   userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'] })
 }
@@ -89,7 +97,7 @@ console.log(computerSelectList)
 
 <template>
   <div class="PlayBox d-flex flex-column align-center">
-
+    <ConfettiExplosion v-if="confetti_Visible" :stageHeight="900" />
     <div class="text-h3 GameTitle d-flex justify-center">
       <span>MasterMind</span>
     </div>
@@ -119,7 +127,6 @@ console.log(computerSelectList)
         </v-card>
       </div>
     </div>
-
 
     <div class="UserBoard d-flex flex-column align-center">
       <v-card variant="tonal"  class="d-flex justify-space-around UserColor mb-10 pa-1">
@@ -156,7 +163,7 @@ console.log(computerSelectList)
 
               - 코드 시퀀스에서 올바른 색상과 올바른 위치에 있는 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 빨간색을 표시합니다.
 
-              - 올바른 색상이지만 코드 시퀀스에서 올바른 위치에 있지 않은 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 흰색을 표시합니다.
+              - 올바른 색상이지만 코드 시퀀스에서 올바른 위치에 있지 않은 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 파란색을 표시합니다.
 
               - 코드 시퀀스의 모든 색상을 추측하고 모두 올바른 위치에 있을 때 게임에서 승리합니다.
 
@@ -164,11 +171,9 @@ console.log(computerSelectList)
 
               이 게임을 하는 방법:
 
-              - '새 게임 시작' 버튼을 클릭하여 새 게임을 시작합니다. 기본 게임 매개변수를 변경하려면 '새 게임 시작' 버튼을 클릭하기 전에 '코드 길이' 및/또는 '중복 허용' 필드를 변경할 수 있습니다.
-
               - 선 채우기를 시작하려면 먼저 표 하단에서 색상을 클릭하여 선택해야 합니다. 색상을 선택한 후 원하는 위치를 클릭하여 위의 현재 추측 라인에 넣을 수 있습니다.
 
-              - 색상 선택을 변경하려면 두 가지 방법이 있습니다. 하나는 하단의 색상 중 하나에서 새 색상을 클릭하는 것이고 다른 하나는 마우스 휠을 스크롤하는 것입니다.
+              - 색상 선택을 변경하려면 하단의 색상 중 하나에서 새 색상을 클릭하면 됩니다.
 
               - 전체 줄을 채운 후에도 컴퓨터가 추측에 응답하도록 요청하기 전에 선택을 변경할 수 있습니다. 추측에 만족하면 '확인' 버튼을 클릭하고 컴퓨터 응답을 받으세요.
             </v-card-text>
