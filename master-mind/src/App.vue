@@ -216,12 +216,12 @@ function three_line_summary(){
                 - 10번안에 맞추면 성공 아니면 실패입니다.<br><br>
               </div>
             </v-card-text>
-            <template>
+            <template class="d-flex justify-end">
               <v-card-actions>
-              <v-btn color="primary" block @click="dialog.state = false">close</v-btn>
+                <v-btn color="red" block @click="three_line_summary" >summary</v-btn>
               </v-card-actions>
               <v-card-actions>
-              <v-btn color="red" block @click="three_line_summary" >summary</v-btn>
+              <v-btn color="primary" block @click="dialog.state = false">close</v-btn>
               </v-card-actions>
             </template>
           </v-card>
