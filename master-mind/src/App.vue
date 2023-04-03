@@ -84,11 +84,11 @@ function newGame(){
             checkList: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2']
         })
     }
-    myColor = '';
     colorIndex = 0;
-    countAccept.count = 0;
-    tryAgain.chk = false;
+    countAccept = reactive({count:0});
+    tryAgain = reactive({chk:false});
     randomColors();
+    console.log(computerSelectList)
 }
 
 /* =============================Created Start========================= */
