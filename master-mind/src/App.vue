@@ -54,6 +54,7 @@ function accept(){
     }
     if(congratulation===4){
         alert(`You did it the ${countAccept.count+1} time!!!!`);
+        tryAgain.chk = true
         explode();
         return false;
     }
@@ -63,6 +64,7 @@ function accept(){
 
   if(countAccept.count===10){
       alert('You failed!!!!!!!');
+      tryAgain.chk = true;
       return false;
   }
 }
@@ -73,11 +75,20 @@ const explode = async() => {
 }
 
 function newGame(){
-    userSelectedList = reactive([]);
+    tryAgain.chk = false
+    userSelectedList = [];
+    for (let i = 0; i < 10; i++) {
+        userSelectedList.push({
+            colors: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2'],
+            index: i,
+            checkList: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2']
+        })
+    }
     myColor = '';
     colorIndex = 0;
-    countAccept = reactive({count:0});
-    tryAgain = reactive({chk:false});
+    countAccept.count = 0;
+    tryAgain.chk = false;
+    randomColors();
 }
 
 /* =============================Created Start========================= */
@@ -108,8 +119,8 @@ const confetti_Visible = ref(false);
             randomColors();
         }
     }
-
     randomColors();
+console.log(computerSelectList)
 /* ==============================Created End============================ */
 </script>
 
