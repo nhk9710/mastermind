@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 
 /* Computer */
 let computerSelectList = [];
+let tryAgain = reactive({chk:false});
 
 /* User */
 let userSelectedList = reactive([]);
@@ -32,6 +33,7 @@ function selectPosition(index){
 
 /* accept 버튼을 눌렀을때 */
 function accept(){
+    let congratulation = 0;
   if(userSelectedList[countAccept.count].colors.includes('grey-darken-2')){
     alert('색을 모두 선택해주세요!');
     return false;
@@ -40,19 +42,28 @@ function accept(){
     for (let i = 0; i < computerSelectList.length; i++) {
         if (userSelectedList[countAccept.count].colors[i] === computerSelectList[i]) {
             userSelectedList[countAccept.count].checkList[i] = 'red'
+            congratulation +=1;
         } else if (computerSelectList.includes(userSelectedList[countAccept.count].colors[i])) {
-            userSelectedList[countAccept.count].checkList[i] = 'white'
+            userSelectedList[countAccept.count].checkList[i] = 'blue'
+        }else{
+            userSelectedList[countAccept.count].checkList[i] = 'grey-darken-1'
         }
     }
+    if(congratulation===4){
+        alert(`You did it the ${countAccept.count+1} time!!!!`);
+        tryAgain.chk = true;
+        return false;
+    }
+    userSelectedList[countAccept.count].checkList.sort()
   /* =====계산식 끝==== */
   countAccept.count++;
 }
 
 /* Created Start */
 for(let i=0; i<10; i++){
-  userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['','','',''] })
+  userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'] })
 }
-let colors = ['red', 'teal', 'blue', 'yellow']
+let colors = ['red', 'teal', 'blue', 'yellow', 'orange', 'purple']
 const dialog = reactive({state:false})
 
 function activeDialog() {
@@ -62,23 +73,22 @@ function activeDialog() {
 /* 컴퓨터 랜덤 색상 */
 function randomColors(){
   computerSelectList = [];
-  for(let i=0; i< colors.length; i++){
+  for(let i=0; i< 4; i++){
     computerSelectList.push(colors[Math.floor(Math.random() * colors.length)])
   }
   let set = new Set(computerSelectList);
 
-  if(colors.length !== set.size){
+  if(4 !== set.size){
     randomColors();
   }
 }
 randomColors();
-
+console.log(computerSelectList)
 /* Created End */
 </script>
 
 <template>
   <div class="PlayBox d-flex flex-column align-center">
-<pre>{{ computerSelectList }}</pre>
 
     <div class="text-h3 GameTitle d-flex justify-center">
       <span>MasterMind</span>
@@ -105,7 +115,7 @@ randomColors();
           variant="tonal"
           class="mb-3 pa-1 d-flex justify-space-around"
         >
-          <v-btn v-for="(chk, index) in item.checkList" disabled :key="`chk-${index}`" :color="chk==='' ? 'grey' : chk==='white' ? 'blue' : 'red'" icon="mdi-plus"></v-btn>
+          <v-btn v-for="(chk, index) in item.checkList" disabled :key="`chk-${index}`" :color="chk" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
     </div>
@@ -118,6 +128,11 @@ randomColors();
 
       <div class="d-flex justify-space-around">
       <v-btn class="CheckBtn" color="blue-accent-3"  @click="accept">accept</v-btn>
+
+        <template v-if="tryAgain.chk">
+          <v-btn class="checkBtn" color="red">Try Again</v-btn>
+        </template>
+
 
         <v-btn
             color="yellow-lighten-1"
