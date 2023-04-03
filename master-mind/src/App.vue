@@ -11,6 +11,8 @@ let userSelectedList = reactive([]);
 let myColor = '';
 let colorIndex = 0;
 let countAccept = reactive({count:0});
+
+
 /* 사용자가 색을 선택했을 때 */
 function pickColor(color, i){
   myColor = color;
@@ -58,6 +60,11 @@ function accept(){
     userSelectedList[countAccept.count].checkList.sort()
   /* =====계산식 끝==== */
   countAccept.count++;
+
+  if(countAccept.count===10){
+      alert('You failed!!!!!!!');
+      return false;
+  }
 }
 const explode = async() => {
     confetti_Visible.value = false;
@@ -65,34 +72,45 @@ const explode = async() => {
     confetti_Visible.value = true;
 }
 
-/* Created Start */
+function newGame(){
+    userSelectedList = reactive([]);
+    myColor = '';
+    colorIndex = 0;
+    countAccept = reactive({count:0});
+    tryAgain = reactive({chk:false});
+}
+
+/* =============================Created Start========================= */
 const confetti_Visible = ref(false);
+    for (let i = 0; i < 10; i++) {
+        userSelectedList.push({
+            colors: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2'],
+            index: i,
+            checkList: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2']
+        })
+    }
+    let colors = ['red', 'teal', 'blue', 'yellow', 'orange', 'purple']
+    const dialog = reactive({state: false})
 
-for(let i=0; i<10; i++){
-  userSelectedList.push({ colors: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'], index: i, checkList: ['grey-darken-2','grey-darken-2','grey-darken-2','grey-darken-2'] })
-}
-let colors = ['red', 'teal', 'blue', 'yellow', 'orange', 'purple']
-const dialog = reactive({state:false})
+    function activeDialog() {
+        dialog.state = dialog.state !== true;
+    }
 
-function activeDialog() {
-  dialog.state = dialog.state !== true;
-}
+    /* 컴퓨터 랜덤 색상 */
+    function randomColors() {
+        computerSelectList = [];
+        for (let i = 0; i < 4; i++) {
+            computerSelectList.push(colors[Math.floor(Math.random() * colors.length)])
+        }
+        let set = new Set(computerSelectList);
 
-/* 컴퓨터 랜덤 색상 */
-function randomColors(){
-  computerSelectList = [];
-  for(let i=0; i< 4; i++){
-    computerSelectList.push(colors[Math.floor(Math.random() * colors.length)])
-  }
-  let set = new Set(computerSelectList);
+        if (4 !== set.size) {
+            randomColors();
+        }
+    }
 
-  if(4 !== set.size){
     randomColors();
-  }
-}
-randomColors();
-console.log(computerSelectList)
-/* Created End */
+/* ==============================Created End============================ */
 </script>
 
 <template>
@@ -137,7 +155,7 @@ console.log(computerSelectList)
       <v-btn class="CheckBtn" color="blue-accent-3"  @click="accept">accept</v-btn>
 
         <template v-if="tryAgain.chk">
-          <v-btn class="checkBtn" color="red">Try Again</v-btn>
+          <v-btn class="checkBtn" color="red" @click="newGame">New Game</v-btn>
         </template>
 
 
@@ -218,7 +236,7 @@ console.log(computerSelectList)
 }
 /* BoardSet End */
 .UserBoard{
-  width: 30%;
+  width: 35%;
 }
 .UserColor{
   width: 50%;
