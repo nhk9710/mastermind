@@ -12,6 +12,4 @@ const vuetify = createVuetify({
     directives
 })
 
-import './assets/main.css'
-
 createApp(App).use(vuetify).mount('#app')

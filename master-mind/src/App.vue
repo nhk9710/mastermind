@@ -71,7 +71,7 @@ function accept(){
         explode();
         return false;
     }
-    console.log(computerSelectList)
+    // console.log(computerSelectList)
     userSelectedList[countAccept.count].checkList.sort()
   /* =====계산식 끝==== */
   countAccept.count++;
@@ -87,6 +87,11 @@ function showHint(){
     alert('One of the Color is' + ' ' + computerSelectList[Math.floor(Math.random() * computerSelectList.length)]);
     return false;
 }
+
+function changeTheme(){
+    nowTheme.value.now = nowTheme.value.now === false;
+}
+
 const explode = async() => {
     confetti_Visible.value = false;
     await nextTick();
@@ -111,6 +116,7 @@ function newGame(){
 }
 
 /* =============================Created Start========================= */
+let nowTheme = ref({ now: false })
 const confetti_Visible = ref(false);
     for (let i = 0; i < 10; i++) {
         userSelectedList.push({
@@ -147,21 +153,29 @@ function three_line_summary(){
 </script>
 
 <template>
-  <div class="PlayBox d-flex flex-column align-center">
+  <div class="PlayBox d-flex flex-column align-center" :style="`background: ${nowTheme.now===false ? '#23292F' : '#F6F8FA'}`">
     <ConfettiExplosion v-if="confetti_Visible" :stageHeight="900" />
-
-    <div class="text-h3 GameTitle d-flex justify-center">
-      <span>MasterMind</span>
+    <div class="d-flex justify-space-around align-center TitleBox">
+      <div>
+        <v-btn :theme="nowTheme.now===false ? 'light' : 'dark'" :color="nowTheme.now===false ? '#F6F8FA' : '#23292F'">GitHub</v-btn>
+      </div>
+      <div class="text-h3 GameTitle d-flex justify-center">
+        <span :style="`color: ${nowTheme.now===false ? '#F6F8FA' : '#23292F'}`">MasterMind</span>
+      </div>
+      <div>
+        <v-btn :theme="nowTheme.now===false ? 'light' : 'dark'" :color="nowTheme.now===false ? '#F6F8FA' : '#23292F'" @click="changeTheme">Theme</v-btn>
+      </div>
     </div>
+
 
     <div class="BoardSet d-flex justify-center mb-lg-10">
       <div class="d-flex flex-column align-center  GameScore mr-10">
-        <div class="text-h5 font-weight-bold ma-3">Your Score</div>
+        <div class="text-h5 font-weight-bold ma-3" :style="`color: ${nowTheme.now===false ? '#F6F8FA' : '#23292F'}`">Your Score</div>
 
         <v-card
           v-for="(score, index) in userScore"
           :key="`userScore-${index}`"
-          variant="outlined"
+          color="grey-lighten-2"
           width="80%"
           class="mb-2"
         >
@@ -170,22 +184,26 @@ function three_line_summary(){
           <v-card-text>you tried {{ score.tryCount }}!!!!</v-card-text>
         </v-card>
       </div>
+
+
       <div class="d-flex flex-column justify-center GameBoard">
         <v-card
           v-for="(card,index) in userSelectedList"
           :key="`card-${index}`"
 
-          :color="index!==countAccept.count ? 'grey-lighten-3' : 'lime-lighten-2'"
+          :color="index!==countAccept.count ? 'grey-lighten-2' : 'lime-lighten-2'"
           class="mb-3 d-flex justify-space-around pa-1"
         >
           <v-btn v-for="(item, i) in card.colors" @click="selectPosition(i)"  :style="index!==countAccept.count ? 'pointer-events:none;':''" :key="`item-${i}`" :color="item" icon="mdi-plus"></v-btn>
         </v-card>
       </div>
+
+
       <div class="d-flex flex-column justify-center ChkBoard ml-10">
         <v-card
           v-for="(item, index) in userSelectedList"
           :key="`item-key-${index}`"
-          variant="tonal"
+          color="grey-lighten-2"
           class="mb-3 pa-1 d-flex justify-space-around"
         >
           <v-btn v-for="(chk, index) in item.checkList" style="pointer-events: none" :key="`chk-${index}`" :color="chk" icon="mdi-plus"></v-btn>
@@ -194,7 +212,7 @@ function three_line_summary(){
     </div>
 
     <div class="UserBoard d-flex flex-column align-center">
-      <v-card variant="tonal"  class="d-flex justify-space-around UserColor mb-10 pa-1">
+      <v-card color="grey-lighten-2"  class="d-flex justify-space-around UserColor mb-10 pa-1">
         <v-btn v-for="(color,i) in colors" :key="`colors-${i}`" @click="pickColor(color, i)" :color="color" icon="mid-plus"></v-btn>
       </v-card>
 
@@ -233,7 +251,7 @@ function three_line_summary(){
 
               - 올바른 색상이지만 코드 시퀀스에서 올바른 위치에 있지 않은 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 파란색을 표시합니다.<br><br>
 
-              - 모든 표시된 색상의 위치와 선택한 색상의 상관관계는 없습니다. 단지 추측이 맞았다 아니다만 알 수 있습니다.<br><br>
+              - 선택한 색상과 추측의 색상은 서로 관련이 없습니다. 단지 선택한 색상이 맞았는지 아닌지 알려주는 역할을 합니다.<br><br>
 
               - 코드 시퀀스의 모든 색상을 추측하고 모두 올바른 위치에 있을 때 게임에서 승리합니다.<br><br>
 
@@ -248,7 +266,7 @@ function three_line_summary(){
               - 전체 줄을 채운 후에도 컴퓨터가 추측에 응답하도록 요청하기 전에 선택을 변경할 수 있습니다. 추측에 만족하면 '확인' 버튼을 클릭하고 컴퓨터 응답을 받으세요.
                 </div>
               <div v-else>
-                - 색상을 선택하고 넣어주세요(중복안됨)<br><br>
+                - 색상을 선택하고 넣어주세요(중복안됨)(맞춘색 추측색 위치상관없음)<br><br>
                 - 한줄 완성하셨으면 accept 버튼을 눌러주세요<br><br>
                 - 10번안에 맞추면 성공 아니면 실패입니다.<br><br>
               </div>
@@ -283,6 +301,9 @@ function three_line_summary(){
   height: 100vh;
 }
 
+.TitleBox{
+    width: 100%;
+}
 .GameTitle{
   padding: 10px;
 }
