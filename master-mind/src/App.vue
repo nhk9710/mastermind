@@ -5,6 +5,8 @@ import ConfettiExplosion from 'vue-confetti-explosion'
 /* Computer ====================================*/
 let computerSelectList = [];
 let tryAgain = reactive({chk:false});
+let hardChk = reactive({chk:false});
+let difficulty = 0;
 
 /* User =========================================*/
 let userSelectedList = reactive([]);
@@ -92,6 +94,29 @@ function changeTheme(){
     nowTheme.value.now = nowTheme.value.now === false;
 }
 
+function harder(){
+    difficulty += 1;
+
+      hardChk.chk = true;
+      colors.push('brown','pink')
+
+
+    tryAgain.chk = false
+    userSelectedList = reactive([]);
+    for (let i = 0; i < 10; i++) {
+        userSelectedList.push({
+            colors: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2'],
+            index: i,
+            checkList: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2']
+        })
+    }
+    colorIndex = 0;
+    countAccept = reactive({count:0});
+    tryAgain = reactive({chk:false});
+    randomColors();
+
+}
+
 const explode = async() => {
     confetti_Visible.value = false;
     await nextTick();
@@ -125,7 +150,7 @@ const confetti_Visible = ref(false);
             checkList: ['grey-darken-2', 'grey-darken-2', 'grey-darken-2', 'grey-darken-2']
         })
     }
-    let colors = ['red', 'teal', 'blue', 'yellow', 'orange', 'purple']
+    let colors = reactive(['red', 'teal', 'blue', 'yellow', 'orange', 'purple']);
     const dialog = reactive({state: false, summary: false})
 function three_line_summary(){
         dialog.summary = dialog.summary !== true;
@@ -157,7 +182,7 @@ function three_line_summary(){
     <ConfettiExplosion v-if="confetti_Visible" :stageHeight="900" />
     <div class="d-flex justify-space-around align-center TitleBox">
       <div>
-        <v-btn :theme="nowTheme.now===false ? 'light' : 'dark'" :color="nowTheme.now===false ? '#F6F8FA' : '#23292F'">GitHub</v-btn>
+        <v-btn href="https://github.com/nhk9710/mastermind" :theme="nowTheme.now===false ? 'light' : 'dark'" :color="nowTheme.now===false ? '#F6F8FA' : '#23292F'">GitHub</v-btn>
       </div>
       <div class="text-h3 GameTitle d-flex justify-center">
         <span :style="`color: ${nowTheme.now===false ? '#F6F8FA' : '#23292F'}`">MasterMind</span>
@@ -181,7 +206,7 @@ function three_line_summary(){
         >
           <v-card-subtitle> player: {{ score.player }} </v-card-subtitle>
           <v-divider></v-divider>
-          <v-card-text>you tried {{ score.tryCount }}!!!!</v-card-text>
+          <v-card-text>You tried {{ score.tryCount }} time!!!!</v-card-text>
         </v-card>
       </div>
 
@@ -212,7 +237,7 @@ function three_line_summary(){
     </div>
 
     <div class="UserBoard d-flex flex-column align-center">
-      <v-card color="grey-lighten-2"  class="d-flex justify-space-around UserColor mb-10 pa-1">
+      <v-card color="grey-lighten-2"  class="d-flex justify-space-around UserColor mb-10 pa-1" :style="hardChk.chk ? 'width: 70%' : ''">
         <v-btn v-for="(color,i) in colors" :key="`colors-${i}`" @click="pickColor(color, i)" :color="color" icon="mid-plus"></v-btn>
       </v-card>
 
@@ -221,17 +246,20 @@ function three_line_summary(){
       <template v-if="countAccept.count===5">
         <v-btn class="HintBtn" color="blue-grey-lighten-1" @click="showHint">Hint</v-btn>
       </template>
-        <template v-if="tryAgain.chk">
-          <v-btn class="checkBtn" color="red" @click="newGame">New Game</v-btn>
-        </template>
+      <template v-if="tryAgain.chk">
+        <v-btn class="checkBtn" color="red" @click="newGame">New Game</v-btn>
+      </template>
+      <template v-if="difficulty === 0 && userScore.length > 0">
+        <v-btn color="deep-orange-accent-4" @click="harder">Hard</v-btn>
+      </template>
+      <v-btn
+        color="yellow-lighten-1"
+        @click="activeDialog"
+      >
+        Rule
+      </v-btn>
 
 
-        <v-btn
-            color="yellow-lighten-1"
-            @click="activeDialog"
-        >
-          Rule
-        </v-btn>
         <v-dialog
           v-model="dialog.state"
           width="50%"
@@ -256,6 +284,8 @@ function three_line_summary(){
               - 코드 시퀀스의 모든 색상을 추측하고 모두 올바른 위치에 있을 때 게임에서 승리합니다.<br><br>
 
               - 컴퓨터 코드 시퀀스를 추측하지 않고 모든 시도를 사용하면 게임에서 패배합니다.<br><br>
+
+              - 한 번 클리어 할 경우 난이도를 한 단계 높일 수 있는 hard 버튼이 생깁니다<br><br>
 
               이 게임을 하는 방법:<br><br>
 
