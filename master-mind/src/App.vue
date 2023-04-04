@@ -137,7 +137,7 @@ function three_line_summary(){
         }
     }
     randomColors();
-console.log(computerSelectList)
+// console.log(computerSelectList)
 /* ==============================Created End============================ */
 </script>
 
