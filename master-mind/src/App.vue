@@ -2,17 +2,18 @@
 import { ref,reactive,nextTick } from 'vue'
 import ConfettiExplosion from 'vue-confetti-explosion'
 
-/* Computer */
+/* Computer ====================================*/
 let computerSelectList = [];
 let tryAgain = reactive({chk:false});
 
-/* User */
+/* User =========================================*/
 let userSelectedList = reactive([]);
 let myColor = '';
 let colorIndex = 0;
 let countAccept = reactive({count:0});
 let userName = '';
-let userDialog = reactive({chk: false})
+let userDialog = reactive({chk: false});
+let userScore = reactive([]);
 
 
 /* 사용자가 색을 선택했을 때 */
@@ -65,6 +66,7 @@ function accept(){
     }
     if(congratulation===4){
         alert(`You did it the ${countAccept.count+1} time!!!!`);
+        userScore.push({ player: userName, tryCount: countAccept.count+1 })
         tryAgain.chk = true
         explode();
         return false;
@@ -135,7 +137,7 @@ function three_line_summary(){
         }
     }
     randomColors();
-// console.log(computerSelectList)
+console.log(computerSelectList)
 /* ==============================Created End============================ */
 </script>
 
@@ -150,6 +152,16 @@ function three_line_summary(){
     <div class="BoardSet d-flex justify-center mb-lg-10">
       <div class="d-flex flex-column align-center  GameScore mr-10">
         <div class="text-h5 font-weight-bold ma-3">Your Score</div>
+
+        <v-card
+          v-for="(score, index) in userScore"
+          :key="`userScore-${index}`"
+          variant="outlined"
+        >
+          <v-card-subtitle> {{ score.player }} </v-card-subtitle>
+          <v-divider></v-divider>
+          <v-card-text>you tried {{ score.tryCount }}!!!!</v-card-text>
+        </v-card>
       </div>
       <div class="d-flex flex-column justify-center GameBoard">
         <v-card
