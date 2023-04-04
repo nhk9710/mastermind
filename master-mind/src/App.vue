@@ -71,7 +71,7 @@ function accept(){
         explode();
         return false;
     }
-    // console.log(computerSelectList)
+    console.log(computerSelectList)
     userSelectedList[countAccept.count].checkList.sort()
   /* =====계산식 끝==== */
   countAccept.count++;
@@ -81,6 +81,11 @@ function accept(){
       tryAgain.chk = true;
       return false;
   }
+}
+
+function showHint(){
+    alert('One of the Color is' + ' ' + computerSelectList[Math.floor(Math.random() * computerSelectList.length)]);
+    return false;
 }
 const explode = async() => {
     confetti_Visible.value = false;
@@ -157,8 +162,10 @@ function three_line_summary(){
           v-for="(score, index) in userScore"
           :key="`userScore-${index}`"
           variant="outlined"
+          width="80%"
+          class="mb-2"
         >
-          <v-card-subtitle> {{ score.player }} </v-card-subtitle>
+          <v-card-subtitle> player: {{ score.player }} </v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text>you tried {{ score.tryCount }}!!!!</v-card-text>
         </v-card>
@@ -193,7 +200,9 @@ function three_line_summary(){
 
       <div class="d-flex justify-space-around">
       <v-btn class="CheckBtn" color="blue-accent-3"  @click="accept">accept</v-btn>
-
+      <template v-if="countAccept.count===5">
+        <v-btn class="HintBtn" color="blue-grey-lighten-1" @click="showHint">Hint</v-btn>
+      </template>
         <template v-if="tryAgain.chk">
           <v-btn class="checkBtn" color="red" @click="newGame">New Game</v-btn>
         </template>
@@ -218,7 +227,7 @@ function three_line_summary(){
 
               - 기본적으로 색상은 코드 시퀀스에서 한 번만 사용할 수 있습니다. '중복 허용'을 선택한 상태에서 새 게임을 시작하면 코드 시퀀스에서 모든 색상을 여러 번 사용할 수 있습니다.<br><br>
 
-              - 당신의 추측으로 한 줄을 채우고 '확인' 버튼을 클릭하면 컴퓨터가 당신의 추측 결과로 응답합니다.<br><br>
+              - 당신의 추측으로 한 줄을 채우고 'accept' 버튼을 클릭하면 컴퓨터가 당신의 추측 결과로 응답합니다.<br><br>
 
               - 코드 시퀀스에서 올바른 색상과 올바른 위치에 있는 추측의 각 색상에 대해 컴퓨터는 현재 추측의 오른쪽에 작은 빨간색을 표시합니다.<br><br>
 
